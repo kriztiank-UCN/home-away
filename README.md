@@ -34,13 +34,13 @@ export const metadata: Metadata = {
 
 ### Create Pages
 
-- bookings
-- checkout
-- favorites
-- profile
-- properties
-- rentals
-- reviews
+- bookings/page.tsx
+- checkout/page.tsx
+- favorites/page.tsx
+- profile/page.tsx
+- properties/page.tsx
+- rentals/page.tsx
+- reviews/page.tsx
 
 - new file - pageName/page.tsx
 
