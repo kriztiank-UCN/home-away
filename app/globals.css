@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* custom class */
 @layer components {
   .container {
     @apply mx-auto max-w-6xl xl:max-w-7xl px-8;

@@ -122,12 +122,13 @@ globals.css
 }
 ```
 
-### Navbar - Structure
+### Navbar.tsx - Structure
 
 ```tsx
 import NavSearch from './NavSearch';
 import LinksDropdown from './LinksDropdown';
 import DarkMode from './DarkMode';
+import Logo from './Logo';
 function Navbar() {
   return (
     <nav className='border-b'>
@@ -144,6 +145,8 @@ function Navbar() {
 }
 export default Navbar;
 ```
+
+### layout.tsx - Structure
 
 ```tsx
 import Navbar from '@/components/navbar/Navbar';
@@ -180,6 +183,7 @@ function Logo() {
     </Button>
   );
 }
+export default Logo;
 ```
 
 ### NavSearch
