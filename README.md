@@ -333,10 +333,10 @@ export default function ModeToggle() {
 ### UserIcon
 
 ```tsx
-import { LuUser2 } from 'react-icons/lu';
+import { LuUser } from 'react-icons/lu';
 
 function UserIcon() {
-  return <LuUser2 className='w-6 h-6 bg-primary rounded-full text-white' />;
+  return <LuUser className='w-6 h-6 bg-primary rounded-full text-white' />;
 }
 export default UserIcon;
 ```
@@ -1100,7 +1100,7 @@ export const fetchProfileImage = async () => {
 - components/navbar/UserIcon.tsx
 
 ```tsx
-import { LuUser2 } from 'react-icons/lu';
+import { LuUser } from 'react-icons/lu';
 import { fetchProfileImage } from '@/utils/actions';
 
 async function UserIcon() {
@@ -1110,7 +1110,7 @@ async function UserIcon() {
     return (
       <img src={profileImage} className='w-6 h-6 rounded-full object-cover' />
     );
-  return <LuUser2 className='w-6 h-6 bg-primary rounded-full text-white' />;
+  return <LuUser className='w-6 h-6 bg-primary rounded-full text-white' />;
 }
 export default UserIcon;
 ```
@@ -1400,7 +1400,7 @@ import FormContainer from './FormContainer';
 import ImageInput from './ImageInput';
 import { SubmitButton } from './Buttons';
 import { type actionFunction } from '@/utils/types';
-import { LuUser2 } from 'react-icons/lu';
+import { LuUser } from 'react-icons/lu';
 
 type ImageInputContainerProps = {
   image: string;
@@ -1415,7 +1415,7 @@ function ImageInputContainer(props: ImageInputContainerProps) {
   const [isUpdateFormVisible, setUpdateFormVisible] = useState(false);
 
   const userIcon = (
-    <LuUser2 className='w-24 h-24 bg-primary rounded-md text-white mb-4' />
+    <LuUser className='w-24 h-24 bg-primary rounded-md text-white mb-4' />
   );
   return (
     <div>
