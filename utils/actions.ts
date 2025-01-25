@@ -6,6 +6,7 @@ import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+// Helper function to get and check if the user exists and has a profile
 const getAuthUser = async () => {
   const user = await currentUser();
   if (!user) {
@@ -15,6 +16,15 @@ const getAuthUser = async () => {
   return user;
 };
 
+// Helper function to render error messages
+const renderError = (error: unknown): { message: string } => {
+  console.log(error);
+  return {
+    message: error instanceof Error ? error.message : 'An error occurred',
+  };
+};
+
+// CREATE PROFILE ACTION
 export const createProfileAction = async (prevState: any, formData: FormData) => {
   try {
     const user = await currentUser();
@@ -38,13 +48,13 @@ export const createProfileAction = async (prevState: any, formData: FormData) =>
       },
     });
   } catch (error) {
-    return {
-      message: error instanceof Error ? error.message : "An error occurred",
-    };
+    // Invoke the renderError function to handle the error
+    return renderError(error);
   }
   redirect("/");
 };
 
+// FETCH PROFILE IMAGE
 export const fetchProfileImage = async () => {
   const user = await currentUser();
   if (!user) return null;
@@ -60,6 +70,7 @@ export const fetchProfileImage = async () => {
   return profile?.profileImage;
 };
 
+// FETCH PROFILE ACTION
 export const fetchProfile = async () => {
   const user = await getAuthUser();
 
@@ -72,9 +83,27 @@ export const fetchProfile = async () => {
   return profile;
 };
 
+// UPDATE PROFILE ACTION
 export const updateProfileAction = async (
   prevState: any,
   formData: FormData
 ): Promise<{ message: string }> => {
-  return { message: 'update profile action' };
+  const user = await getAuthUser();
+  try {
+    const rawData = Object.fromEntries(formData);
+
+    const validatedFields = profileSchema.parse(rawData);
+
+    await db.profile.update({
+      where: {
+        clerkId: user.id,
+      },
+      data: validatedFields,
+    });
+    revalidatePath('/profile');
+    return { message: 'Profile updated successfully' };
+  } catch (error) {
+    // Invoke the renderError function to handle the error
+    return renderError(error);
+  }
 };
