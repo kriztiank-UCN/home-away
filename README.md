@@ -1119,9 +1119,9 @@ export default UserIcon;
 
 ```tsx
 import { currentUser } from '@clerk/nextjs/server';
-
 import { redirect } from 'next/navigation';
-async function CreateProfile() {
+
+async function CreateProfilePage() {
   const user = await currentUser();
   if (user?.privateMetadata?.hasProfile) redirect('/');
   ....
