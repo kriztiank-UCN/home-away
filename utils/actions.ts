@@ -106,3 +106,11 @@ export const updateProfileAction = async (
     return renderError(error);
   }
 };
+
+// UPDATE PROFILE IMAGE ACTION
+export const updateProfileImageAction = async (
+  prevState: any,
+  formData: FormData
+): Promise<{ message: string }> => {
+  return { message: 'Profile image updated successfully' };
+};
