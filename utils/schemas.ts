@@ -1,15 +1,27 @@
-import * as z from 'zod';
-import { ZodSchema } from 'zod';
+import * as z from "zod";
+import { ZodSchema } from "zod";
 
+// Validation for create and update profile
 export const profileSchema = z.object({
   // firstName: z.string().max(5, { message: 'max length is 5' }),
   firstName: z.string().min(2, {
-    message: 'first name must be at least 2 characters',
+    message: "first name must be at least 2 characters",
   }),
   lastName: z.string().min(2, {
-    message: 'last name must be at least 2 characters',
+    message: "last name must be at least 2 characters",
   }),
   username: z.string().min(2, {
-    message: 'username must be at least 2 characters',
+    message: "username must be at least 2 characters",
   }),
 });
+
+// Generic function to validate data with Zod schema
+export function validateWithZodSchema<T>(schema: ZodSchema<T>, data: unknown): T {
+  const result = schema.safeParse(data);
+
+  if (!result.success) {
+    const errors = result.error.errors.map(error => error.message);
+    throw new Error(errors.join(","));
+  }
+  return result.data;
+}
