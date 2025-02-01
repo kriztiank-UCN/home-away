@@ -1826,6 +1826,7 @@ function PriceInput({ defaultValue }: FormInputNumberProps) {
 }
 export default PriceInput;
 ```
+- app/rentals/create/page.tsx
 
 ```tsx
 /* price */
