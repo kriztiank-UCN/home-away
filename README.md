@@ -1912,6 +1912,8 @@ export const categories: Category[] = [
 
 ### Categories Input
 
+- components/form/CategoriesInput.tsx
+
 ```tsx
 import { Label } from '@/components/ui/label';
 import { categories } from '@/utils/categories';
