@@ -2323,7 +2323,7 @@ return (
 );
 ```
 
-### createRentalAction
+### createPropertyAction
 
 ```tsx
 export const createPropertyAction = async (

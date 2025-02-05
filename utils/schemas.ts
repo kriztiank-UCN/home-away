@@ -26,11 +26,11 @@ export function validateWithZodSchema<T>(schema: ZodSchema<T>, data: unknown): T
   return result.data;
 }
 
+// Validation for file upload
 export const imageSchema = z.object({
   image: validateFile(),
 });
 
-// Validation for file upload
 function validateFile() {
   const maxUploadSize = 1024 * 1024;
   const acceptedFileTypes = ["image/"];
@@ -49,44 +49,46 @@ export const propertySchema = z.object({
   name: z
     .string()
     .min(2, {
-      message: 'name must be at least 2 characters.',
+      message: "name must be at least 2 characters.",
     })
     .max(100, {
-      message: 'name must be less than 100 characters.',
+      message: "name must be less than 100 characters.",
     }),
   tagline: z
     .string()
     .min(2, {
-      message: 'tagline must be at least 2 characters.',
+      message: "tagline must be at least 2 characters.",
     })
     .max(100, {
-      message: 'tagline must be less than 100 characters.',
+      message: "tagline must be less than 100 characters.",
     }),
+  // coerce is used to convert the value coming from chadcn to a number
   price: z.coerce.number().int().min(0, {
-    message: 'price must be a positive number.',
+    message: "price must be a positive number.",
   }),
   category: z.string(),
   description: z.string().refine(
-    (description) => {
-      const wordCount = description.split(' ').length;
+    description => {
+      const wordCount = description.split(" ").length;
       return wordCount >= 10 && wordCount <= 1000;
     },
     {
-      message: 'description must be between 10 and 1000 words.',
+      message: "description must be between 10 and 1000 words.",
     }
   ),
   country: z.string(),
+   // coerce is used to convert the value coming from the hidden input to a number
   guests: z.coerce.number().int().min(0, {
-    message: 'guest amount must be a positive number.',
+    message: "guest amount must be a positive number.",
   }),
   bedrooms: z.coerce.number().int().min(0, {
-    message: 'bedrooms amount must be a positive number.',
+    message: "bedrooms amount must be a positive number.",
   }),
   beds: z.coerce.number().int().min(0, {
-    message: 'beds amount must be a positive number.',
+    message: "beds amount must be a positive number.",
   }),
   baths: z.coerce.number().int().min(0, {
-    message: 'bahts amount must be a positive number.',
+    message: "bahts amount must be a positive number.",
   }),
   amenities: z.string(),
 });

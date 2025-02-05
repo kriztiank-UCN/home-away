@@ -10,9 +10,9 @@ import { uploadImage } from "./supabase";
 const getAuthUser = async () => {
   const user = await currentUser();
   if (!user) {
-    throw new Error('You must be logged in to access this route');
+    throw new Error("You must be logged in to access this route");
   }
-  if (!user.privateMetadata.hasProfile) redirect('/profile/create');
+  if (!user.privateMetadata.hasProfile) redirect("/profile/create");
   return user;
 };
 
@@ -20,7 +20,7 @@ const getAuthUser = async () => {
 const renderError = (error: unknown): { message: string } => {
   console.log(error);
   return {
-    message: error instanceof Error ? error.message : 'An error occurred',
+    message: error instanceof Error ? error.message : "An error occurred",
   };
 };
 
@@ -79,7 +79,7 @@ export const fetchProfile = async () => {
       clerkId: user.id,
     },
   });
-  if (!profile) return redirect('/profile/create');
+  if (!profile) return redirect("/profile/create");
   return profile;
 };
 
@@ -92,7 +92,7 @@ export const updateProfileAction = async (
   try {
     const rawData = Object.fromEntries(formData);
     const validatedFields = validateWithZodSchema(profileSchema, rawData);
-    
+
     await db.profile.update({
       where: {
         clerkId: user.id,
@@ -100,8 +100,8 @@ export const updateProfileAction = async (
       data: validatedFields,
     });
 
-    revalidatePath('/profile');
-    return { message: 'Profile updated successfully' };
+    revalidatePath("/profile");
+    return { message: "Profile updated successfully" };
   } catch (error) {
     // Invoke the renderError function to handle the error
     return renderError(error);
@@ -115,7 +115,7 @@ export const updateProfileImageAction = async (
 ): Promise<{ message: string }> => {
   const user = await getAuthUser();
   try {
-    const image = formData.get('image') as File;
+    const image = formData.get("image") as File;
     const validatedFields = validateWithZodSchema(imageSchema, { image });
     const fullPath = await uploadImage(validatedFields.image);
 
@@ -127,9 +127,9 @@ export const updateProfileImageAction = async (
         profileImage: fullPath,
       },
     });
-    revalidatePath('/profile');
+    revalidatePath("/profile");
 
-    return { message: 'Profile image updated successfully' };
+    return { message: "Profile image updated successfully" };
   } catch (error) {
     return renderError(error);
   }
@@ -143,11 +143,52 @@ export const createPropertyAction = async (
   const user = await getAuthUser();
   try {
     const rawData = Object.fromEntries(formData);
-    const validatedFields = validateWithZodSchema(propertySchema, rawData);
+    const file = formData.get("image") as File;
 
-    return { message: 'Property created successfully' };
+    const validatedFields = validateWithZodSchema(propertySchema, rawData);
+    const validatedFile = validateWithZodSchema(imageSchema, { image: file });
+    const fullPath = await uploadImage(validatedFile.image);
+
+    await db.property.create({
+      data: {
+        ...validatedFields,
+        image: fullPath,
+        profileId: user.id,
+      },
+    });
   } catch (error) {
     return renderError(error);
   }
-  // redirect('/');
+  redirect("/");
+};
+
+// FETCH PROPERTIES ACTION
+export const fetchProperties = async ({
+  search = "",
+  category,
+}: {
+  search?: string;
+  category?: string;
+}) => {
+  const properties = await db.property.findMany({
+    where: {
+      category,
+      OR: [
+        { name: { contains: search, mode: "insensitive" } },
+        { tagline: { contains: search, mode: "insensitive" } },
+      ],
+    },
+    select: {
+      id: true,
+      name: true,
+      tagline: true,
+      country: true,
+      price: true,
+      image: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return properties;
 };
