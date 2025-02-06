@@ -1,10 +1,10 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import CountryFlagAndName from './CountryFlagAndName';
-import PropertyRating from './PropertyRating';
-import FavoriteToggleButton from './FavoriteToggleButton';
-import { PropertyCardProps } from '@/utils/types';
-import { formatCurrency } from '@/utils/format';
+import Image from "next/image";
+import Link from "next/link";
+import CountryFlagAndName from "./CountryFlagAndName";
+import PropertyRating from "./PropertyRating";
+import FavoriteToggleButton from "./FavoriteToggleButton";
+import { PropertyCardProps } from "@/utils/types";
+import { formatCurrency } from "@/utils/format";
 
 function PropertyCard({ property }: { property: PropertyCardProps }) {
   const { name, image, price } = property;
@@ -23,21 +23,18 @@ function PropertyCard({ property }: { property: PropertyCardProps }) {
           />
         </div>
         <div className='flex justify-between items-center'>
-          <h3 className='text-sm font-semibold mt-1'>
-            {name.substring(0, 30)}
-          </h3>
+          <h3 className='text-sm font-semibold mt-1'>{name.substring(0, 30)}</h3>
           {/* property rating */}
           <PropertyRating inPage={false} propertyId={propertyId} />
         </div>
-        <p className='text-sm mt-1 text-muted-foreground '>
-          {tagline.substring(0, 40)}
-        </p>
+        <p className='text-sm mt-1 text-muted-foreground '>{tagline.substring(0, 40)}</p>
         <div className='flex justify-between items-center mt-1'>
           <p className='text-sm mt-1 '>
             <span className='font-semibold'>{formatCurrency(price)} </span>
             night
           </p>
-          {/* TODO: country and flag */}
+          {/* country and flag */}
+          <CountryFlagAndName countryCode={country} />
         </div>
       </Link>
       <div className='absolute top-5 right-5 z-5'>
