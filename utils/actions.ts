@@ -1,3 +1,4 @@
+import { actionFunction } from '@/utils/types';
 "use server";
 import { imageSchema, profileSchema, propertySchema, validateWithZodSchema } from "./schemas";
 import db from "./db";
@@ -193,6 +194,7 @@ export const fetchProperties = async ({
   return properties;
 };
 
+// FETCH FAVORITE ID
 export const fetchFavoriteId = async ({
   propertyId,
 }: {
@@ -210,7 +212,34 @@ export const fetchFavoriteId = async ({
   });
   return favorite?.id || null;
 };
-// temp placeholder
-export const toggleFavoriteAction = async () => {
-  return { message: 'toggle favorite' };
+
+// TOGGLE FAVORITE ACTION
+export const toggleFavoriteAction = async (prevState: {
+  propertyId: string;
+  favoriteId: string | null;
+  pathname: string;
+}) => {
+  const user = await getAuthUser();
+  const { propertyId, favoriteId, pathname } = prevState;
+  try {
+    if (favoriteId) {
+      await db.favorite.delete({
+        where: {
+          id: favoriteId,
+        },
+      });
+    } else {
+      await db.favorite.create({
+        data: {
+          propertyId,
+          profileId: user.id,
+        },
+      });
+    }
+    revalidatePath(pathname);
+    return { message: favoriteId ? 'Removed from Faves' : 'Added to Faves' };
+  } catch (error) {
+    return renderError(error);
+  }
 };
+
