@@ -20,6 +20,7 @@ model Profile {
   updatedAt    DateTime   @updatedAt
   // One to many relationship with Property, one Profile can have many Properties
   properties   Property[]
+  favorites    Favorite[]
 }
 
 model Property {
@@ -41,4 +42,18 @@ model Property {
   // properties can only have one Profile
   profile     Profile    @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
   profileId   String
+  favorites    Favorite[]
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+
+  property   Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+
 }
