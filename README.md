@@ -3296,12 +3296,8 @@ export default ShareButton;
 - properties/[id]/page.tsx
 
 ```tsx
-return (
-  <div className='flex items-center gap-x-4'>
+    {/* share button */}
     <ShareButton name={property.name} propertyId={property.id} />
-    <FavoriteToggleButton propertyId={property.id} />
-  </div>
-);
 ```
 
 ### ImageContainer
