@@ -3485,7 +3485,7 @@ export default UserInfo;
 const firstName = property.profile.firstName;
 const profileImage = property.profile.profileImage;
 
-<UserInfo profile={{ firstName, profileImage }} />;
+<UserInfo profile={{ firstName, profileImage }} />
 ```
 
 ### Description
