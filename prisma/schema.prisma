@@ -21,6 +21,8 @@ model Profile {
   // One to many relationship with Property, one Profile can have many Properties
   properties   Property[]
   favorites    Favorite[]
+  // Users can leave many reviews, but each review can only have one user
+  reviews Review[]
 }
 
 model Property {
@@ -43,6 +45,8 @@ model Property {
   profile     Profile    @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
   profileId   String
   favorites    Favorite[]
+  // Each property can have many reviews, but each review can only have one property
+  reviews Review[]
 }
 
 model Favorite {
@@ -56,4 +60,16 @@ model Favorite {
   property   Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   propertyId String
 
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  profile   Profile  @relation(fields: [profileId], references: [clerkId], onDelete: Cascade)
+  profileId String
+  property   Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
