@@ -277,7 +277,7 @@ export const fetchPropertyDetails = (id: string) => {
   });
 };
 
-// temp placeholder functions
+// CREATE REVIEW ACTION
 export async function createReviewAction(prevState: any, formData: FormData) {
   const user = await getAuthUser();
   try {
@@ -297,9 +297,29 @@ export async function createReviewAction(prevState: any, formData: FormData) {
   }
 }
 
-export const fetchPropertyReviews = async () => {
-  return { message: 'fetch reviews' };
-};
+// FETCH PROPERTY REVIEWS
+export async function fetchPropertyReviews(propertyId: string) {
+  const reviews = await db.review.findMany({
+    where: {
+      propertyId,
+    },
+    select: {
+      id: true,
+      rating: true,
+      comment: true,
+      profile: {
+        select: {
+          firstName: true,
+          profileImage: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+  return reviews;
+}
 
 export const fetchPropertyReviewsByUser = async () => {
   return { message: 'fetch user reviews' };
