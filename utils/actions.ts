@@ -1,5 +1,11 @@
 "use server";
-import { createReviewSchema, imageSchema, profileSchema, propertySchema, validateWithZodSchema } from "./schemas";
+import {
+  createReviewSchema,
+  imageSchema,
+  profileSchema,
+  propertySchema,
+  validateWithZodSchema,
+} from "./schemas";
 import db from "./db";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -194,11 +200,7 @@ export const fetchProperties = async ({
 };
 
 // FETCH FAVORITE ID
-export const fetchFavoriteId = async ({
-  propertyId,
-}: {
-  propertyId: string;
-}) => {
+export const fetchFavoriteId = async ({ propertyId }: { propertyId: string }) => {
   const user = await getAuthUser();
   const favorite = await db.favorite.findFirst({
     where: {
@@ -236,7 +238,7 @@ export const toggleFavoriteAction = async (prevState: {
       });
     }
     revalidatePath(pathname);
-    return { message: favoriteId ? 'Removed from Faves' : 'Added to Faves' };
+    return { message: favoriteId ? "Removed from Faves" : "Added to Faves" };
   } catch (error) {
     return renderError(error);
   }
@@ -262,7 +264,7 @@ export const fetchFavorites = async () => {
       },
     },
   });
-  return favorites.map((favorite) => favorite.property);
+  return favorites.map(favorite => favorite.property);
 };
 
 // FETCH PROPERTY DETAILS
@@ -291,7 +293,7 @@ export async function createReviewAction(prevState: any, formData: FormData) {
       },
     });
     revalidatePath(`/properties/${validatedFields.propertyId}`);
-    return { message: 'Review submitted successfully' };
+    return { message: "Review submitted successfully" };
   } catch (error) {
     return renderError(error);
   }
@@ -315,16 +317,50 @@ export async function fetchPropertyReviews(propertyId: string) {
       },
     },
     orderBy: {
-      createdAt: 'desc',
+      createdAt: "desc",
     },
   });
   return reviews;
 }
 
+// FETCH PROPERTY REVIEWS BY USER
 export const fetchPropertyReviewsByUser = async () => {
-  return { message: 'fetch user reviews' };
+  const user = await getAuthUser();
+  const reviews = await db.review.findMany({
+    where: {
+      profileId: user.id,
+    },
+    select: {
+      id: true,
+      rating: true,
+      comment: true,
+      property: {
+        select: {
+          name: true,
+          image: true,
+        },
+      },
+    },
+  });
+  return reviews;
 };
 
-export const deleteReviewAction = async () => {
-  return { message: 'delete  reviews' };
+// DELETE REVIEW ACTION
+export const deleteReviewAction = async (prevState: { reviewId: string }) => {
+  const { reviewId } = prevState;
+  const user = await getAuthUser();
+
+  try {
+    await db.review.delete({
+      where: {
+        id: reviewId,
+        profileId: user.id,
+      },
+    });
+
+    revalidatePath("/reviews");
+    return { message: "Review deleted successfully" };
+  } catch (error) {
+    return renderError(error);
+  }
 };
