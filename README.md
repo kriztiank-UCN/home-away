@@ -3808,7 +3808,7 @@ return (
   <section>
     <section></section>
     {/* after two column section */}
-    <SubmitReview propertyId={property.id} />;
+    <SubmitReview propertyId={property.id} />
   </section>
 );
 ```
