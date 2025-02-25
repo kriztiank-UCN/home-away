@@ -77,7 +77,7 @@ export const propertySchema = z.object({
     }
   ),
   country: z.string(),
-   // coerce is used to convert the value coming from the hidden input to a number
+  // coerce is used to convert the value coming from the hidden input to a number
   guests: z.coerce.number().int().min(0, {
     message: "guest amount must be a positive number.",
   }),
@@ -91,4 +91,11 @@ export const propertySchema = z.object({
     message: "bahts amount must be a positive number.",
   }),
   amenities: z.string(),
+});
+
+// Validation for create review
+export const createReviewSchema = z.object({
+  propertyId: z.string(),
+  rating: z.coerce.number().int().min(1).max(5),
+  comment: z.string().min(10).max(1000),
 });
