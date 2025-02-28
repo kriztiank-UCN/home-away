@@ -275,6 +275,12 @@ export const fetchPropertyDetails = (id: string) => {
     },
     include: {
       profile: true,
+      bookings: {
+        select: {
+          checkIn: true,
+          checkOut: true,
+        },
+      },
     },
   });
 };
@@ -367,7 +373,7 @@ export const deleteReviewAction = async (prevState: { reviewId: string }) => {
 
 export async function fetchPropertyRating(propertyId: string) {
   const result = await db.review.groupBy({
-    by: ['propertyId'],
+    by: ["propertyId"],
     _avg: {
       rating: true,
     },
@@ -387,10 +393,7 @@ export async function fetchPropertyRating(propertyId: string) {
 }
 
 // FETCH PROFILE REVIEWS
-export const findExistingReview = async (
-  userId: string,
-  propertyId: string
-) => {
+export const findExistingReview = async (userId: string, propertyId: string) => {
   return db.review.findFirst({
     where: {
       profileId: userId,
