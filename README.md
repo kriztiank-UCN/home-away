@@ -5418,6 +5418,7 @@ function AmenitiesInput({ defaultValue }: { defaultValue?: Amenity[] }) {
     selected,
     icon: amenities.find((amenity) => amenity.name === name)!.icon,
   }));
+  
   const [selectedAmenities, setSelectedAmenities] = useState<Amenity[]>(
     amenitiesWithIcons || amenities
   );
