@@ -549,3 +549,25 @@ export async function deleteRentalAction(prevState: { propertyId: string }) {
     return renderError(error);
   }
 }
+
+// FETCH & UPDATE RENTAL
+export const fetchRentalDetails = async (propertyId: string) => {
+  const user = await getAuthUser();
+
+  return db.property.findUnique({
+    where: {
+      id: propertyId,
+      profileId: user.id,
+    },
+  });
+};
+
+// UPDATE RENTAL ACTION PLACEHOLDER
+export const updatePropertyAction = async () => {
+  return { message: 'update property action' };
+};
+
+// UPDATE RENTAL IMAGE ACTION PLACEHOLDER
+export const updatePropertyImageAction = async () => {
+  return { message: 'update property image' };
+};
