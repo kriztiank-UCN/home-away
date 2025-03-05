@@ -5693,8 +5693,8 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 const isPublicRoute = createRouteMatcher(['/', '/properties(.*)']);
-
 const isAdminRoute = createRouteMatcher(['/admin(.*)']);
+
 export default clerkMiddleware(async (auth, req) => {
   const isAdminUser = auth().userId === process.env.ADMIN_USER_ID;
   if (isAdminRoute(req) && !isAdminUser) {
@@ -5718,7 +5718,7 @@ import { auth } from '@clerk/nextjs/server';
 function LinksDropdown() {
   const { userId } = auth();
   const isAdminUser = userId === process.env.ADMIN_USER_ID;
-}
+
 return (
   <>
     {links.map((link) => {
@@ -5733,6 +5733,7 @@ return (
     })}
   </>
 );
+}
 ```
 
 ### Admin User - Loading
