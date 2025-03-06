@@ -23,6 +23,13 @@ const getAuthUser = async () => {
   return user;
 };
 
+// Helper function to get and check if the user is an admin
+const getAdminUser = async () => {
+  const user = await getAuthUser();
+  if (user.id !== process.env.ADMIN_USER_ID) redirect("/");
+  return user;
+};
+
 // Helper function to render error messages
 const renderError = (error: unknown): { message: string } => {
   console.log(error);
@@ -632,7 +639,7 @@ export const fetchReservations = async () => {
     },
 
     orderBy: {
-      createdAt: 'desc', // or 'asc' for ascending order
+      createdAt: "desc", // or 'asc' for ascending order
     },
 
     include: {
@@ -647,4 +654,19 @@ export const fetchReservations = async () => {
     },
   });
   return reservations;
+};
+
+// FETCH STATS
+export const fetchStats = async () => {
+  await getAdminUser();
+
+  const usersCount = await db.profile.count();
+  const propertiesCount = await db.property.count();
+  const bookingsCount = await db.booking.count();
+
+  return {
+    usersCount,
+    propertiesCount,
+    bookingsCount,
+  };
 };
