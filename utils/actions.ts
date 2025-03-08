@@ -418,6 +418,8 @@ export const createBookingAction = async (prevState: {
   checkOut: Date;
 }) => {
   const user = await getAuthUser();
+  // create variable
+  let bookingId: null | string = null;
 
   const { propertyId, checkIn, checkOut } = prevState;
   const property = await db.property.findUnique({
@@ -444,10 +446,13 @@ export const createBookingAction = async (prevState: {
         propertyId,
       },
     });
+    // change value
+    bookingId = booking.id;
   } catch (error) {
     return renderError(error);
   }
-  redirect("/bookings");
+  // redirect to checkout
+  redirect(`/checkout?bookingId=${bookingId}`);
 };
 
 // FETCH BOOKINGS ACTION
@@ -686,13 +691,13 @@ export const fetchChartsData = async () => {
       },
     },
     orderBy: {
-      createdAt: 'asc',
+      createdAt: "asc",
     },
   });
   let bookingsPerMonth = bookings.reduce((total, current) => {
     const date = formatDate(current.createdAt, true);
 
-    const existingEntry = total.find((entry) => entry.date === date);
+    const existingEntry = total.find(entry => entry.date === date);
     if (existingEntry) {
       existingEntry.count += 1;
     } else {
