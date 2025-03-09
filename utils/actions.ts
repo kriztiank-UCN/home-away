@@ -418,6 +418,14 @@ export const createBookingAction = async (prevState: {
   checkOut: Date;
 }) => {
   const user = await getAuthUser();
+  // delete all unpaid bookings
+  await db.booking.deleteMany({
+    where: {
+      profileId: user.id,
+      paymentStatus: false,
+    },
+  });
+
   // create variable
   let bookingId: null | string = null;
 
@@ -461,6 +469,8 @@ export const fetchBookings = async () => {
   const bookings = await db.booking.findMany({
     where: {
       profileId: user.id,
+      // Check for 'paymentStatus' when fetching bookings
+      paymentStatus: true,
     },
     include: {
       property: {
@@ -517,6 +527,8 @@ export const fetchRentals = async () => {
       const totalNightsSum = await db.booking.aggregate({
         where: {
           propertyId: rental.id,
+          // Check for 'paymentStatus' when fetching bookings
+          paymentStatus: true,
         },
         _sum: {
           totalNights: true,
@@ -526,6 +538,8 @@ export const fetchRentals = async () => {
       const orderTotalSum = await db.booking.aggregate({
         where: {
           propertyId: rental.id,
+          // Check for 'paymentStatus' when fetching bookings
+          paymentStatus: true,
         },
         _sum: {
           orderTotal: true,
@@ -639,6 +653,8 @@ export const fetchReservations = async () => {
 
   const reservations = await db.booking.findMany({
     where: {
+      // Check for 'paymentStatus' when fetching bookings
+      paymentStatus: true,
       property: {
         profileId: user.id,
       },
@@ -668,7 +684,12 @@ export const fetchStats = async () => {
 
   const usersCount = await db.profile.count();
   const propertiesCount = await db.property.count();
-  const bookingsCount = await db.booking.count();
+  const bookingsCount = await db.booking.count({
+    where: {
+      // Check for 'paymentStatus' when fetching bookings
+      paymentStatus: true,
+    },
+  });
 
   return {
     usersCount,
@@ -686,6 +707,8 @@ export const fetchChartsData = async () => {
 
   const bookings = await db.booking.findMany({
     where: {
+      // Check for 'paymentStatus' when fetching bookings
+      paymentStatus: true,
       createdAt: {
         gte: sixMonthsAgo,
       },

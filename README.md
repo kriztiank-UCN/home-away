@@ -6197,6 +6197,7 @@ export const createBookingAction = async (prevState: {
 
   - fetchBookings
   - rentalsWithBookingSums
+  - orderTotalSum
   - fetchReservations
   - fetchStats
 
